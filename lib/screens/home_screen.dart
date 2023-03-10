@@ -15,32 +15,35 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String inputQuery = '';
-  List<dynamic>? countryData;
+  List<dynamic>? countriesData;
   // bool _isLoading = true;
   final List<Widget> images = [];
   @override
   void initState() {
     super.initState();
     getData();
+    // print('postGETDATa');
+    // print(countriesData);
   }
 
   Future<void> getData() async {
-    countryData = await CountryApi.getCountries();
-    print(countryData);
+    countriesData = await CountryApi.getCountries();
+  }
 
-    // setState(() {
-    //   _isLoading = false;
-    // });
+  Future<void> getCountrybyName(countryName) async {
+    countriesData = await CountryApi.getCountrybyName(countryName);
   }
 
   @override
   Widget build(BuildContext context) {
+    // print("Inside the homescfeenn");
+    // print(countriesData);
     return Scaffold(
         appBar: AppBar(
-          title: Text('Cities App'),
+          title: const Text('Cities App'),
           actions: <Widget>[
             Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: SizedBox(
                 width: 400,
                 child: TextField(
@@ -48,28 +51,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     setState(() {
                       inputQuery = text;
                     });
-                    print(inputQuery);
+                    getCountrybyName(inputQuery);
+                    //    print(inputQuery);
                   },
                 ),
               ),
             )
           ],
         ),
-        // body: Center(
-        //   child: ElevatedButton(
-        //     onPressed: () {
-
-        //     },
-        //     child: const Text('Click Me'),
-        //   ),
-        // ),
-        body: ListView.builder(
-            itemCount: countryData?.length,
-            itemBuilder: (context, index) {
-              return CountryCard(
-                countryNames: countryData?[0],
-                flagURLS: countryData?[1],
-              );
-            }));
+        body: Center(
+          child: ListView.builder(itemBuilder: (context, index) {
+            return CountryCard(
+              countryData: countriesData?[index],
+            );
+          }),
+        )
+        // body: Padding(
+        //   padding: EdgeInsets.all(20),
+        //   child: ListView.builder(itemBuilder: (context , index){
+        //     return
+        //   },),
+        // )
+        );
   }
 }
